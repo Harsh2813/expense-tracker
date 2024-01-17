@@ -1,11 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import ErrorModal from "../Components/UI/ErrorModal";
 import "./AuthForm.css";
+import AuthContext from "../Store/AuthContext";
+import { useHistory } from "react-router-dom";
 
 const AuthForm = () => {
   const [login, setLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState();
+
+  const authCxt = useContext(AuthContext);
+  const history = useHistory();
 
   const passwordRef = useRef("");
   const emailRef = useRef("");
@@ -63,10 +68,10 @@ const AuthForm = () => {
       let url;
       if (login) {
         url =
-          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]";
+          "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD1QTiD2WAjTJB-k-WnIHq5acACBf5EVko";
       } else {
         url =
-          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=[API_KEY]";
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD1QTiD2WAjTJB-k-WnIHq5acACBf5EVko";
       }
       const response = await fetch(url, {
         method: "POST",
@@ -82,7 +87,8 @@ const AuthForm = () => {
         throw new Error(errorMessage);
       }
       const data = await response.json();
-      console.log(data);
+      authCxt.login(data.idToken, data.email);
+      history.replace('/');
     } catch (error) {
       alert(error.message);
     } finally {
@@ -124,7 +130,12 @@ const AuthForm = () => {
               />
             </div>
           )}
-          <button type="submit">{login ? "LogIn" : "SignUp"}</button>
+          {!isLoading && (
+            <button type="submit">
+              {login ? "Login" : "Create Account"}
+            </button>
+          )}
+          {isLoading && <p>Sending Request...</p>}
         </form>
         <button
           className="switch"
