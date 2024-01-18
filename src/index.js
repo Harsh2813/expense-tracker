@@ -6,16 +6,19 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./Store/AuthContext";
 
-import '../node_modules/react-bootstrap/dist/react-bootstrap';
-import '../node_modules/bootstrap/dist/css/bootstrap.css';
+import "../node_modules/react-bootstrap/dist/react-bootstrap";
+import "../node_modules/bootstrap/dist/css/bootstrap.css";
+import { ExpenseContextProvider } from "./Store/ExpenseContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ExpenseContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ExpenseContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );
