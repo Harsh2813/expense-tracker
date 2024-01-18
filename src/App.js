@@ -5,6 +5,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import AuthContext from "./Store/AuthContext";
 import UserProfile from "./Pages/UserProfile";
+import VerifyPasswordChange from "./Pages/VerifyPasswordChange";
 
 const App = () => {
   const authCxt = useContext(AuthContext);
@@ -22,6 +23,11 @@ const App = () => {
         {!authCxt.isLoggedIn && (
           <Route path="/auth">
             <AuthForm />
+          </Route>
+        )}
+        {!authCxt.isLoggedIn && (
+          <Route path="/verifyPasswordChange">
+            <VerifyPasswordChange />
           </Route>
         )}
       </Switch>

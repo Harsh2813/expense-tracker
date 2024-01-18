@@ -3,6 +3,7 @@ import ErrorModal from "../Components/UI/ErrorModal";
 import "./AuthForm.css";
 import AuthContext from "../Store/AuthContext";
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 const AuthForm = () => {
   const [login, setLogin] = useState(true);
@@ -88,7 +89,9 @@ const AuthForm = () => {
       }
       const data = await response.json();
       authCxt.login(data.idToken, data.email);
-      history.replace('/');
+      history.replace('./');
+      //{login && authCxt.isLoggedIn ? authCxt.sendVerification() : history.replace('/')};//first we verfied user id by sending mail used firebase api in authcontext
+
     } catch (error) {
       alert(error.message);
     } finally {
@@ -136,6 +139,7 @@ const AuthForm = () => {
             </button>
           )}
           {isLoading && <p>Sending Request...</p>}
+          <Link to='/verifyPasswordChange'>Forgot Password?</Link>
         </form>
         <button
           className="switch"
