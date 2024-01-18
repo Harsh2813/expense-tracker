@@ -101,7 +101,7 @@ const AuthForm = () => {
 
   return (
     <>
-      <section>
+      <section className="authForm">
         {error && (
           <ErrorModal
             title={error.title}

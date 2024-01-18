@@ -4,6 +4,7 @@ import NavBar from "./Components/NavBar/NavBar";
 import { Route, Switch, Redirect } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import AuthContext from "./Store/AuthContext";
+import UserProfile from "./Pages/UserProfile";
 
 const App = () => {
   const authCxt = useContext(AuthContext);
@@ -14,6 +15,9 @@ const App = () => {
       <Switch>
         <Route exact path="/">
           {authCxt.isLoggedIn ? <HomePage/> : <Redirect to='/auth'/>}
+        </Route>
+        <Route path='/profile'>
+          {authCxt.isLoggedIn ? <UserProfile/> : <Redirect to='/auth'/>}
         </Route>
         {!authCxt.isLoggedIn && (
           <Route path="/auth">
