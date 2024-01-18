@@ -6,6 +6,7 @@ import HomePage from "./Pages/HomePage";
 import AuthContext from "./Store/AuthContext";
 import UserProfile from "./Pages/UserProfile";
 import VerifyPasswordChange from "./Pages/VerifyPasswordChange";
+import ExpenseTrack from "./Components/ExpenseList.js/ExpenseTrack";
 
 const App = () => {
   const authCxt = useContext(AuthContext);
@@ -19,6 +20,9 @@ const App = () => {
         </Route>
         <Route path='/profile'>
           {authCxt.isLoggedIn ? <UserProfile/> : <Redirect to='/auth'/>}
+        </Route>
+        <Route path='/trackExpense'>
+          {authCxt.isLoggedIn ? <ExpenseTrack/> : <Redirect to='/auth'/>}
         </Route>
         {!authCxt.isLoggedIn && (
           <Route path="/auth">

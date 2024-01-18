@@ -11,13 +11,14 @@ const NavBar = () => {
     <>
        <Navbar bg="light" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+          <Navbar.Brand href="#home">Expense Tracker</Navbar.Brand>
           <Nav className="me-auto">
-            <Link to="/" className='nav-link'>Home</Link>
-            <Link to="/about" className='nav-link'>About</Link>
-            <Link to="/contactUs" className='nav-link'>ContactUs</Link>
-            <Link to="/auth" className='nav-link'>Login</Link>
-            <Button variant="outline-secondary" style={{marginLeft: '900px'}} onClick={() => authCxt.logout()}>Logout</Button>
+            {authCxt.isLoggedIn && <Link to="/" className='nav-link'>Home</Link>}
+            {authCxt.isLoggedIn && <Link to="/about" className='nav-link'>About</Link>}
+            {authCxt.isLoggedIn && <Link to="/contactUs" className='nav-link'>ContactUs</Link>}
+            {authCxt.isLoggedIn && <Link to="/trackExpense" className='nav-link'>Track</Link>}
+            {!authCxt.isLoggedIn && <Link to="/auth" className='nav-link'>Login</Link>}
+            {authCxt.isLoggedIn && <Button variant="outline-secondary" style={{marginLeft: '800px'}} onClick={() => authCxt.logout()}>Logout</Button>}
           </Nav>
         </Container>
       </Navbar>
