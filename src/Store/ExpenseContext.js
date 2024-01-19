@@ -5,6 +5,8 @@ const ExpenseContext = React.createContext({
   addExpense: (data) => {},
   deleteExpense: () => {},
   isLoading: false,
+  deleteParticularExpense: (id) => {},
+  editExpense: (id, newData) => {},
 });
 
 export const ExpenseContextProvider = (props) => {
@@ -28,7 +30,7 @@ export const ExpenseContextProvider = (props) => {
       }
       const data = await response.json();
       setExpense((prevExpense) => {
-        return [...prevExpense, item];//don't depend on response [..prevExp, data] data is response was creating err
+        return [...prevExpense, {id: data.name, ...item}];//don't depend on response [..prevExp, data] data is response was creating err and we taken id as name which we getting in response for deleting perticular item
       });
       setIsLoading(false);
       console.log(data);
@@ -49,6 +51,7 @@ export const ExpenseContextProvider = (props) => {
           throw new Error(errorMessage);
         }
         const data = await response.json();
+        console.log(data);
         let expenseArr = [];
         for (let key in data) {
           expenseArr.push({
@@ -85,11 +88,52 @@ export const ExpenseContextProvider = (props) => {
     }
   };
 
+  const deleteParticularExpenseHandler = async(id) => {
+    try{
+        const response = await fetch(`https://expense-tracker-bd985-default-rtdb.firebaseio.com/expense/${id}.json`, {
+            method: 'DELETE',
+        })
+        if(!response.ok){
+            const errorMessage = await response.json();
+            throw new Error(errorMessage);
+        }
+        setExpense((prevExpense) => prevExpense.filter((item) => item.id !== id));
+    }catch(error){
+        console.log(error);
+        alert('cant delete this');
+    }
+  };
+
+  const editExpenseHandler = async (id, newData) => {
+    try {
+      const response = await fetch(
+        `https://expense-tracker-bd985-default-rtdb.firebaseio.com/expense/${id}.json`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(newData),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (!response.ok) {
+        let err = await response.json();
+        throw new Error(err);
+      }
+      setExpense((prevExpense) =>
+        prevExpense.map((item) => (item.id === id ? { ...item, ...newData } : item))
+      );
+    } catch (error) {
+      alert("failed To Edit!!");
+      console.log(error);
+    }
+  };
+
   const ExpContextValue = {
     expenses: expense,
     isLoading: isLoading,
     addExpense: addExpenseHandler,
     deleteExpense: deleteExpenseHandler,
+    deleteParticularExpense: deleteParticularExpenseHandler,
+    editExpense: editExpenseHandler,
   };
   return (
     <>

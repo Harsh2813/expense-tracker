@@ -11,7 +11,7 @@ const NavBar = () => {
     <>
        <Navbar bg="light" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="#home">Expense Tracker</Navbar.Brand>
+          <Navbar.Brand>Expense Tracker</Navbar.Brand>
           <Nav className="me-auto">
             {authCxt.isLoggedIn && <Link to="/" className='nav-link'>Home</Link>}
             {authCxt.isLoggedIn && <Link to="/about" className='nav-link'>About</Link>}

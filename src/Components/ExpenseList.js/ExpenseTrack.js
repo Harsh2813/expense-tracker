@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useContext, useState } from "react";
 import {
   Row,
   Col,
@@ -16,6 +16,7 @@ const ExpenseTrack = () => {
   const categoryRef = useRef("");
 
   const expenseCxt = useContext(ExpenseContext);
+  const [editingExpense, setEditingExpense] = useState(null);
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
@@ -25,17 +26,33 @@ const ExpenseTrack = () => {
     const enteredCategory = categoryRef.current.value;
 
     const data = {
-      id: Math.random().toString(),
       money: enteredMoney,
       description: enteredDescription,
       category: enteredCategory,
     };
-    expenseCxt.addExpense(data);
+    if (editingExpense) {
+        // If editingExpense is not null, update the existing expense, jo bhi new input kiye use pass kiye
+        expenseCxt.editExpense(editingExpense.id, data);
+        setEditingExpense(null); // Reset the editingExpense state
+      } else {
+        // If editingExpense is null, add a new expense mtlb editing ni kiye input me add kiye direct
+        expenseCxt.addExpense(data);
+      }
 
     moneyRef.current.value = "";
     descriptionRef.current.value = "";
     categoryRef.current.value = "select";
   };
+
+  const startEditHandler = (expense) => {
+    // Set the editingExpense state when the user clicks on Edit taki update ke baad hi ye as newData pass krenge
+    setEditingExpense(expense);
+    // Pre-fill the form fields with the data of the expense being edited, jo niche se pass kiye as item
+    moneyRef.current.value = expense.money;
+    descriptionRef.current.value = expense.description;
+    categoryRef.current.value = expense.category;
+  };
+
 
   return (
     <>
@@ -80,7 +97,7 @@ const ExpenseTrack = () => {
         onClick={formSubmitHandler}
         style={{ width: "100px", display: "block", margin: "auto" }}
       >
-        Submit
+        {editingExpense ? 'Update' : 'Submit'}
       </Button>
 
       <div className="container text-center mt-5">
@@ -96,6 +113,20 @@ const ExpenseTrack = () => {
               <Card.Body>
                 <Card.Title>{item.category}</Card.Title>
                 <Card.Text>{item.description}</Card.Text>
+                <Button
+                  onClick={() => startEditHandler(item)/*ye perticulr item passed above for agin input prefill*/}
+                  variant="outline-warning"
+                  style={{ width: "20%", margin: '10px' }}
+                >
+                  Edit Expenses
+                </Button>
+                <Button
+                  onClick={() => expenseCxt.deleteParticularExpense(item.id)}
+                  variant="outline-danger"
+                  style={{ width: "20%" }}
+                >
+                  Delete Expenses
+                </Button>
               </Card.Body>
               <Card.Footer className="text-muted">This Year</Card.Footer>
             </Card>
